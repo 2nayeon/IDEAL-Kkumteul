@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>꿈틀 | 나의 2026 만다라트</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-logo">
+        <i class="fas fa-seedling"></i>
+        <span>꿈틀</span>
+    </div>
+    <div class="header-menu">
+        <a th:href="@{/logout}" class="btn-logout-top">로그아웃</a>
+    </div>
+</header>
+
+<div class="main-layout">
+    <div class="info-section">
+        <h1 class="main-title">
+            <span>2026년</span><br>목표 대시보드
+        </h1>
+
+        <div class="status-cards">
+            <p class="guide-text">오늘도 성장하는 중!</p>
+            <div class="mini-card">
+                <span class="label">성장 D-Day</span>
+                <span class="value" th:text="|D-${dDay}|">D-308</span>
+            </div>
+            <div class="mini-card">
+                <span class="label">전체 달성률</span>
+                <div class="progress-bar">
+                    <div class="fill" th:style="|width: ${progress}%;|"></div>
+                </div>
+                <span class="percent" th:text="|${progress}%|">25%</span>
+            </div>
+        </div>
+
+        <button class="btn-submit" th:onclick="|location.href='/mandalart/edit/' + ${mandalart.id}|">만다라트 수정하기</button>
+    </div>
+
+    <div class="mandalart-section">
+        <div class="mandalart-outer-grid">
+            <div th:each="j : ${#numbers.sequence(0, 8)}" class="cell-display"
+                 th:with="catIdx=${j < 4 ? j : j - 1}"
+                 th:classappend="${j == 4} ? 'absolute-center' : 'center-block'">
+
+                <div th:if="${j != 4}" class="clickable-area" th:onclick="|openCategory(${mandalart.categories[catIdx].id})|">
+                    <span th:text="${mandalart.categories[catIdx].categoryName}">카테고리</span>
+                </div>
+
+                <div th:if="${j == 4}" class="center-label">
+                    <span>2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="transition-overlay" class="zoom-overlay"></div>
+
+<script th:inline="javascript">
+    function openCategory(categoryId) {
+        const overlay = document.getElementById('transition-overlay');
+        if(overlay) overlay.classList.add('active');
+        setTimeout(() => {
+            window.location.href = '/mandalart/category/' + categoryId;
+        }, 800);
+    }
+</script>
+</body>
+</html>

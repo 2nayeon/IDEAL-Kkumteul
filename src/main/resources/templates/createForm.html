@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>꿈틀 - 2026 만다라트 설정</title>
+    <link rel="stylesheet" th:href="@{/css/createForm.css}">
+</head>
+<body>
+
+<form th:action="@{/mandalart/save}" method="post" class="main-form">
+    <input type="hidden" name="mandalartId" th:value="${mandalartId}" th:if="${mandalartId != null}">
+
+    <div class="info-section">
+        <h1>
+            <span th:text="${userName != null ? userName : 'ooo'}">ooo</span>님의<br>
+            2026년 만다라트
+        </h1>
+        <p class="guide-text"
+           th:text="${(isEdit ?: false) ? '목표를 수정하고 다시 저장해보세요!' : '세부 목표를 채워주세요!'}">
+            세부 목표를 채워주세요!
+        </p>
+        <button type="submit" class="btn-submit"
+                th:text="${(isEdit ?: false) ? '수정 완료하기' : '목표 저장하기'}">
+            목표 저장하기
+        </button>
+    </div>
+
+    <div class="mandalart-section">
+        <div class="mandalart-outer-grid">
+            <div th:each="i : ${#numbers.sequence(0, 8)}" class="category-block">
+
+                <div th:each="j : ${#numbers.sequence(0, 8)}" class="cell"
+                     th:with="isBlockCenter=${j == 4},
+                              isMainCenterBlock=${i == 4},
+                              isAbsoluteCenter=${i == 4 && j == 4}"
+                     th:classappend="${
+                            isAbsoluteCenter ? 'absolute-center' :
+                            isMainCenterBlock ? 'center-block' :
+                            isBlockCenter ? 'sub-center' : ''
+                         }">
+
+                    <textarea th:name="'goal[' + ${i} + '][' + ${j} + ']'"
+                              th:readonly="${isBlockCenter || isMainCenterBlock}"
+                              th:classappend="${(isBlockCenter || isMainCenterBlock) ? 'locked-cell' : ''}"
+                              th:text="${
+
+                                    isAbsoluteCenter ? '2026' :
+
+
+                                    (i == 4 && j == 0) ? '독서' :
+                                    (i == 4 && j == 1) ? '운동' :
+                                    (i == 4 && j == 2) ? '공부' :
+                                    (i == 4 && j == 3) ? '경제' :
+                                    (i == 4 && j == 5) ? '여행' :
+                                    (i == 4 && j == 6) ? '취미' :
+                                    (i == 4 && j == 7) ? '가족' :
+                                    (i == 4 && j == 8) ? '자기관리' :
+
+
+                                    (j == 4 && i == 0) ? '독서' :
+                                    (j == 4 && i == 1) ? '운동' :
+                                    (j == 4 && i == 2) ? '공부' :
+                                    (j == 4 && i == 3) ? '경제' :
+                                    (j == 4 && i == 5) ? '여행' :
+                                    (j == 4 && i == 6) ? '취미' :
+                                    (j == 4 && i == 7) ? '가족' :
+                                    (j == 4 && i == 8) ? '자기관리' :
+
+
+                                    (i != 4 && j != 4 && goals != null && goals['goal[' + i + '][' + j + ']'] != null)
+                                    ? goals['goal[' + i + '][' + j + ']'] : ''
+                              }"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>
