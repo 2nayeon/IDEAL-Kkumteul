@@ -67,23 +67,28 @@ public class MandalartService {
         Mandalart mandalart = mandalartRepository.findById(mandalartId)
                 .orElseThrow(() -> new IllegalArgumentException("수정할 만다라트가 없습니다."));
 
-        // 기존 카테고리들을 순회하며 데이터 업데이트
         for (Category category : mandalart.getCategories()) {
-            int i = category.getPosition(); // DB에 저장된 블록 위치 (0~8)
+            int i = category.getPosition();
 
-            for (Cell cell : category.getCells()) {
-                int j = cell.getIndex(); // DB에 저장된 셀 위치 (0~8)
+            for (int j = 0; j < 9; j++) {
+                if (j == 4) continue; // 블록 가운데 칸은 영역 이름이라 제외
 
-                // [수정 완료] Key 값의 공백을 제거하여 HTML name과 정확히 매칭
-                String key = "goal[" + i + "][" + j + "]";
-                String newContent = goalParams.get(key);
+                String newContent = goalParams.get("goal[" + i + "][" + j + "]");
+                if (newContent == null) continue;
 
-                if (newContent != null) {
-                    cell.updateContent(newContent); // Cell 엔티티의 변경 감지 발생
+                final int idx = j;
+                Cell cell = category.getCells().stream()
+                        .filter(c -> c.getIndex() == idx)
+                        .findFirst()
+                        .orElse(null);
+
+                if (cell != null) {
+                    cell.updateContent(newContent);          // 기존 칸이면 내용 수정
+                } else if (!newContent.isBlank()) {
+                    new Cell(category, j, newContent);       // 없던 칸이면 새로 생성
                 }
             }
         }
-        // Transactional 덕분에 save 호출 없이도 메서드 종료 시 DB에 반영됨
         return mandalart.getId();
     }
 

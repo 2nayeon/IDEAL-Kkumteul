@@ -32,7 +32,14 @@ public class MandalartController {
      */
     @GetMapping("/mandalart/new")
     public String createForm(Model model, @AuthenticationPrincipal OAuth2User principal) {
-        // ... 기존 코드 ...
+        User user = userRepository.findByEmail(principal.getAttribute("email"))
+                .orElseThrow(() -> new IllegalArgumentException("유저 정보 없음"));
+
+        if (!user.getMandalarts().isEmpty()) {
+            return "redirect:/mandalart/main/" + user.getMandalarts().get(0).getId();
+        }
+
+        model.addAttribute("userName", principal.getAttribute("name"));
         model.addAttribute("isEdit", false); // 확실하게 false를 넣어줌
         model.addAttribute("goals", new HashMap<String, String>());
         return "createForm";
@@ -144,7 +151,7 @@ public class MandalartController {
 
         // 2. 모델에 "userName"이라는 이름으로 전달
         model.addAttribute("userName", name);
-
+        model.addAttribute("mandalartId", id);
         model.addAttribute("isEdit", true); // 확실하게 true를 넣어줌
         model.addAttribute("goals", mandalartService.getCellMap(id));
         return "createForm";
