@@ -85,6 +85,9 @@ users 1 ── N mandalarts 1 ── N categorys 1 ── N cells
 - 연말까지 남은 일수를 계산해 D-Day 표시
 - 로그인 후 만다라트가 없으면 작성 화면으로, 있으면 메인 화면으로 이동하도록 분기
 
+- ## 시연 영상
+
+[![꿈틀 시연 영상](https://img.youtube.com/vi/z0PYB5UwNUk/hqdefault.jpg)](https://youtu.be/z0PYB5UwNUk)
 
 ## 화면
 | 메인 |
